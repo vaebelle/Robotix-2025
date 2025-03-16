@@ -1,4 +1,4 @@
-// Line Sensor Array
+// QTR 8A pin assignments
 #define SENSOR8 A7
 #define SENSOR7 A6
 #define SENSOR6 A5
@@ -7,31 +7,77 @@
 #define SENSOR3 A2
 #define SENSOR2 A1
 #define SENSOR1 A0
+#define LED_CTRL 6
 
-//#define LED_CTRL 6
+// Global sensor arrays
+const int sensorArray[8] = {SENSOR8, 
+                            SENSOR7, 
+                            SENSOR6,  
+                            SENSOR5, 
+                            SENSOR4, 
+                            SENSOR3, 
+                            SENSOR2, 
+                            SENSOR1};
+int sensorValActive[8];
+int sensorValPassive[8];
+int sensorValTrue[8];
 
 void setup() {
   Serial.begin(9600);
   
-  pinMode(SENSOR8, INPUT);
-  pinMode(SENSOR7, INPUT);
-  pinMode(SENSOR6, INPUT);
-  pinMode(SENSOR5, INPUT);
-  pinMode(SENSOR4, INPUT);
-  pinMode(SENSOR3, INPUT);
-  pinMode(SENSOR2, INPUT);
-  pinMode(SENSOR1, INPUT);
+  for (int i = 0; i < 8; i++) {
+    pinMode(sensorArray[i], INPUT); // Setting pins sensor pins as input
+  }
+
+  pinMode(LED_CTRL, OUTPUT); // Setting LED_CTRL pin as output
 }
 
 void loop() {
-  int val_8 = analogRead(SENSOR8);  
-  int val_7 = analogRead(SENSOR7);          
-  int val_6 = analogRead(SENSOR6);      
-  int val_5 = analogRead(SENSOR5);       
-  int val_4 = analogRead(SENSOR4);         
-  int val_3 = analogRead(SENSOR3);      
-  int val_2 = analogRead(SENSOR2);       
-  int val_1 = analogRead(SENSOR1);
+  readSensorsActive(sensorValActive); 
+  readSensorsPassive(sensorValPassive);
+  getTrueReading(sensorValActive, sensorValPassive, sensorValTrue);
+
+  displayReadings(sensorValTrue);
+}
+
+// Computes true IR sensor readings by subtracting ambient light values
+void getTrueReading (int* sensorValActive, int* sensorValPassive, int* sensorValTrue) {
+  for (int i=0 ; i<8 ; i++) {
+    sensorValTrue[i] = sensorValActive[i] - sensorValPassive[i];
+  }
+}
+
+// Captures sensor readings with IR LEDs turned ON
+void readSensorsActive (int* sensorValActive) {
+  digitalWrite(LED_CTRL, HIGH);
+  delay(5);
+
+  for (int i=0 ; i<8 ; i++) {
+    sensorValActive[i] = analogRead(sensorArray[i]);
+  }
+
+  digitalWrite(LED_CTRL, LOW);
+}
+
+// Captures sensor readings with IR LEDs turned OFF
+void readSensorsPassive (int* sensorValPassive) {
+  digitalWrite(LED_CTRL, LOW);
+
+  for (int i=0 ; i<8 ; i++) {
+    sensorValPassive[i] = analogRead(sensorArray[i]);
+  }
+}
+
+// Displays sensor readings in serial monitor
+void displayReadings (int* sensorReadings) {
+  int val_8 = sensorReadings[0];  
+  int val_7 = sensorReadings[1];          
+  int val_6 = sensorReadings[2];    
+  int val_5 = sensorReadings[3];       
+  int val_4 = sensorReadings[4];         
+  int val_3 = sensorReadings[5];      
+  int val_2 = sensorReadings[6];       
+  int val_1 = sensorReadings[7];
 
   Serial.print("\t");
   Serial.print("8: ");
