@@ -32,6 +32,20 @@ void setup() {
 }
 
 void loop() {
+  readSensorsActive(sensorValActive;)
   position = qtr.readLineBlack(sensorValActive);
   Serial.print(position);
+}
+
+void readSensorsActive (uint8_t* sensorValActive)
+{
+  digitalWrite(LED_CTRL, HIGH);
+  delay(5);
+
+  for (int i=0; i<8; i++)
+  {
+    sensorValActive[i] = analogRead(sensorArray[i]);
+  }
+
+  digitalWrite(LED_CTRL, LOW);
 }
