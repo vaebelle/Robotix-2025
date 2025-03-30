@@ -110,7 +110,7 @@ void loop() {
 
     int leftSpeed = constrain((baseSpeed - motorSpeed), minSpeed, maxSpeed);
     int rightSpeed = constrain((baseSpeed + motorSpeed), minSpeed, maxSpeed);
-dsfsd
+
     leftMotor.drive(leftSpeed);
     rightMotor.drive(rightSpeed);
   }
