@@ -469,9 +469,9 @@
       "plot": "fab_outputs/",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "uyLy_LFChassis.step",
+      "step": "../../../../../dasfadsfasdfasdfasdf.step",
       "svg": "../",
-      "vrml": ""
+      "vrml": "../../../../../uyLy_LFChassis.wrl"
     },
     "page_layout_descr_file": ""
   },
